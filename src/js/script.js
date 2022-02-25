@@ -91,6 +91,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion(){
@@ -162,8 +163,24 @@
           const option = param.options[optionId];
           //console.log(optionId, option);
 
-          // check if there is param with a name of paramId in formData and if it includes optionId
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
+          // find image 
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId + '');
+          //console.log('option image: ', optionImage);
+
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+
+          if(optionImage) {
+            // add image if it is selected
+            if(optionSelected) {
+              optionImage.classList.add(classNames.menuProduct.imageVisible);  
+            }
+            // remove image if it is not selected
+            else {
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
+            }
+          }  
+
+          if(optionSelected) {
             // check if the option is not default
             if(!option.default) {
               // add option price to price variable
