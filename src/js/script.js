@@ -380,9 +380,38 @@
 
       /* add element to product list */
       thisCart.dom.productList.appendChild(thisCart.element);
+
+      thisCart.products.push(menuProduct);
+      //thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+      //console.log('thisCart.products: ', thisCart.products);
     }
   }
+  /*
+  class  CartProduct {
+    constructor(menuProduct, element){
+      thisCartProduct = this;
 
+      thisCartProduct.clickable = menuProduct.clickable;
+      thisCartProduct.form = menuProduct.form;
+      thisCartProduct.priceElem = menuProduct.priceElem;
+      thisCartProduct.imageWrapper = menuProduct.imageWrapper;
+      thisCartProduct.amountWidget = menuProduct.amountWidget;
+      thisCartProduct.cartButton = menuProduct.cartButton;
+    }
+    getElements(element){
+      thisCartProduct = this;
+      thisCartProduct.dom = {};
+      thisCartProduct.dom.wrapper = element;
+      thisCartProduct.dom.amountWidget = element.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
+  
+      console.log('thisCartProduct: ', thisCartProduct);
+    }   
+  }
+  
+  */
   const app = {
     initMenu: function(){
       const thisApp = this;
