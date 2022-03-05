@@ -312,9 +312,9 @@
 
       if(thisWidget.value !== newValue && !isNaN(newValue) && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax){
         thisWidget.value = newValue;
+        
       }
       thisWidget.input.value = thisWidget.value;
-
       thisWidget.announce();
     }
 
@@ -328,19 +328,19 @@
       thisWidget.linkDecrease.addEventListener('click', function(event){
         event.preventDefault();
         thisWidget.setValue(thisWidget.value - 1);
-
       });
 
       thisWidget.linkIncrease.addEventListener('click', function(event){
         event.preventDefault();
         thisWidget.setValue(thisWidget.value + 1);
-
       });
     }
 
     announce(){
       const thisWidget = this;
-      const event = new Event ('updated');
+      const event = new CustomEvent('updated', {
+        bubbles: true
+      });
       thisWidget.element.dispatchEvent(event);
     }
   }
@@ -359,6 +359,10 @@
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
       thisCart.dom.productList = element.querySelector(select.cart.productList);
+      thisCart.dom.deliveryFee = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
+      thisCart.dom.subtotalPrice = thisCart.dom.wrapper.querySelector(select.cart.subtotalPrice);
+      thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelectorAll(select.cart.totalPrice);
+      thisCart.dom.totalNumber = thisCart.dom.wrapper.querySelector(select.cart.totalNumber);
     }
 
     initActions(){
@@ -366,23 +370,65 @@
       thisCart.dom.toggleTrigger.addEventListener('click', function(){
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });  
+      thisCart.dom.productList.addEventListener('updated', function(){
+        thisCart.update();
+      });
+      thisCart.dom.productList.addEventListener('remove', function(event){
+        thisCart.remove(event.detail.cartProduct);
+      });
+      
     }
     add(menuProduct){
       const thisCart = this;
       //console.log('adding product: ', menuProduct);
 
       /* generate HTML based on template */
-      const generatedDOM = templates.cartProduct(menuProduct);
+      const generatedHTML = templates.cartProduct(menuProduct);
 
       /* create element using utils.createElementFromHTML */
-      thisCart.element = utils.createDOMFromHTML(generatedDOM);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
 
       /* add element to product list */
-      thisCart.dom.productList.appendChild(thisCart.element);
+      thisCart.dom.productList.appendChild(generatedDOM);
 
       //thisCart.products.push(menuProduct);
       thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
-      console.log('thisCart.products: ', thisCart.products);
+      //console.log('thisCart.products: ', thisCart.products);
+
+      thisCart.update();
+    }
+    update(){
+      const thisCart = this;
+      let deliveryFee = settings.cart.defaultDeliveryFee;
+      thisCart.totalNumber = 0;
+      thisCart.subtotalPrice = 0;
+
+      for(const productInCart of thisCart.products){
+        thisCart.subtotalPrice += productInCart.price;
+        thisCart.totalNumber += productInCart.amount;
+      }
+
+      if(thisCart.totalNumber == 0) {
+        deliveryFee = 0;
+        thisCart.totalPrice = 0;
+      } else {
+        thisCart.totalPrice = thisCart.subtotalPrice + deliveryFee; 
+      }
+
+      thisCart.dom.deliveryFee.innerHTML = deliveryFee;
+      thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
+      thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
+      
+      for(const totalPriceInCart of thisCart.dom.totalPrice) {
+        totalPriceInCart.innerHTML = thisCart.totalPrice;
+      }
+    }
+    remove(cartProduct){
+      const thisCart = this;
+      cartProduct.dom.wrapper.remove();
+      const indexOfRemoveProduct = thisCart.products.indexOf(cartProduct);
+      thisCart.products.splice(indexOfRemoveProduct, 1);
+      thisCart.update();
     }
   }
   
@@ -390,9 +436,16 @@
     constructor(menuProduct, element){
       const thisCartProduct = this;
 
+      thisCartProduct.amount = menuProduct.amount;
       thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.params = menuProduct.params;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.price = menuProduct.price;
 
       thisCartProduct.getElements(element); 
+      thisCartProduct.CartAmountWidget();
+      thisCartProduct.initActions();
 
       console.log('thisCartProduct: ', thisCartProduct);
     }
@@ -405,6 +458,37 @@
       thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
       thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
       thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
+    }
+    CartAmountWidget(){
+      const thisCartProduct = this;
+
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
+      thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
+        thisCartProduct.amount = thisCartProduct.amountWidget.value;
+        thisCartProduct.price = thisCartProduct.subtotalPrice * thisCartProduct.amount;
+        thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
+      });
+    }
+    remove(){
+      const thisCartProduct = this;
+      const event = new CustomEvent('remove', {
+        bubbles: true,
+        detail: {
+          cartProduct: thisCartProduct,
+        },
+      });
+      thisCartProduct.dom.wrapper.dispatchEvent(event);
+    }
+    initActions(){
+      const thisCartProduct = this;
+      
+      thisCartProduct.dom.edit.addEventListener('click', function(event){
+        event.preventDefault();
+      }); 
+      thisCartProduct.dom.remove.addEventListener('click', function(event){
+        event.preventDefault();
+        thisCartProduct.remove();
+      }); 
     }
   } 
   const app = {
