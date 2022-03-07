@@ -291,7 +291,7 @@
     constructor(element){
       const thisWidget = this;
       thisWidget.getElements(element);
-      thisWidget.setValue(settings.amountWidget.defaultValue);
+      thisWidget.setValue(thisWidget.input.value);
       thisWidget.initAction(); 
       //console.log('AmountWidget: ', thisWidget);
       //console.log('contructor arguments: ', element);
@@ -309,7 +309,7 @@
     setValue(value){
       const thisWidget = this;
       const newValue = parseInt(value);
-
+      thisWidget.value = settings.amountWidget.defaultValue;
       if(thisWidget.value !== newValue && !isNaN(newValue) && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax){
         thisWidget.value = newValue;
         
@@ -441,7 +441,7 @@
       thisCartProduct.name = menuProduct.name;
       thisCartProduct.params = menuProduct.params;
       thisCartProduct.priceSingle = menuProduct.priceSingle;
-      thisCartProduct.price = menuProduct.price;
+      thisCartProduct.price = menuProduct.priceSingle * menuProduct.amount;
 
       thisCartProduct.getElements(element); 
       thisCartProduct.CartAmountWidget();
@@ -464,8 +464,7 @@
 
       thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
       thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
-        thisCartProduct.amount = thisCartProduct.amountWidget.value;
-        thisCartProduct.price = thisCartProduct.subtotalPrice * thisCartProduct.amount;
+        thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amountWidget.value;
         thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
       });
     }
