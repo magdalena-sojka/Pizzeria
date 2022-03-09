@@ -445,7 +445,7 @@
 
     sendOrder(){
       const thisCart = this;
-      const url = settings.db.url + "/" + settings.db.orders;
+      const url = 'settings.db.url + "/" + settings.db.orders';
       const payload = {
         address: thisCart.dom.address.value,
         phone: thisCart.dom.phone.value,
@@ -454,10 +454,12 @@
         totalNumber: thisCart.totalNumber,
         deliveryFee: thisCart.deliveryFee,
         products: [],
-      }
+      };
+
       for(let prod of thisCart.products) {
         payload.products.push(prod.getData());
       }
+
       const options = {
         method: 'POST',
         headers: {
@@ -465,6 +467,7 @@
         },
         body: JSON.stringify(payload),
       };
+      
       fetch(url, options)
         .then(function(response){
           return response.json();
