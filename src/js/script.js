@@ -442,7 +442,16 @@
       thisCart.products.splice(indexOfRemoveProduct, 1);
       thisCart.update();
     }
-
+    clearCart(){
+      const thisCart = this;
+      for(const cartProduct of thisCart.products){
+        cartProduct.dom.wrapper.remove();
+      }
+      thisCart.products = [];
+      thisCart.update();
+      thisCart.dom.phone.value = '';
+      thisCart.dom.address.value = '';
+    }
     sendOrder(){
       const thisCart = this;
       const url = settings.db.url + '/' + settings.db.orders;
@@ -473,6 +482,7 @@
           return response.json();
         }).then(function(parsedResponse){
           console.log('parasedResponse', parsedResponse);
+          thisCart.clearCart();
         });
     }    
   }
