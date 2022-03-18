@@ -64,7 +64,7 @@ class Booking{
       ],
     };
 
-    //console.log('getData params: ', params);
+    console.log('getData params: ', params);
 
     const urls = {
       booking:        settings.db.url + '/' + settings.db.booking + '?' + params.booking.join('&'),
@@ -93,7 +93,7 @@ class Booking{
         console.log(bookings);
         console.log(eventsCurrent);
         console.log(eventsRepeat);
-      });
+      });  
   }
 }
 
