@@ -251,7 +251,7 @@ class Booking {
     const payload = {
       date: thisBooking.datePicker.value,
       hour: thisBooking.hourPicker.value,
-      table: thisBooking.selectedTable,
+      table: parseInt(thisBooking.selectedTable),
       duration: thisBooking.hoursAmount.value,
       ppl: thisBooking.peopleAmount.value,
       starters: [],
@@ -279,9 +279,11 @@ class Booking {
       }).then(function(parsedResponse){
         console.log('parsedResponse', parsedResponse);
         thisBooking.makeBooked(payload.date, payload.hour, payload.duration, payload.table);
+        thisBooking.updateDOM();
+        console.log('booked', thisBooking.booked);  
       });
 
-
+    
     
   }
 }
