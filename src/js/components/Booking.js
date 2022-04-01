@@ -281,6 +281,7 @@ class Booking {
         thisBooking.makeBooked(payload.date, payload.hour, payload.duration, payload.table);
         console.log('booked', thisBooking.booked);
         thisBooking.updateDOM();
+        thisBooking.clearSelected();
       });
 
     

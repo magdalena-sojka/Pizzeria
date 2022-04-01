@@ -1,5 +1,3 @@
-import {settings} from '../settings.js';
-
 
 class BaseWidget{
   constructor(wrapperElement, initialValue){
@@ -19,7 +17,6 @@ class BaseWidget{
   set value(value){
     const thisWidget = this;
     const newValue = thisWidget.parseValue(value);
-    thisWidget.correctValue = settings.amountWidget.defaultValue;
     if(thisWidget.correctValue !== newValue && thisWidget.isValid(newValue)){
       thisWidget.correctValue = newValue;
       thisWidget.announce();

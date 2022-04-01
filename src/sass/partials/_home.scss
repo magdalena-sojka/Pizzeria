@@ -136,57 +136,47 @@
 
 .gallery {
   margin: 64px 0;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.image-gallery-4 {
-  background: url('../../images/assets/pizza-4.jpg');
-}
-
-.image-gallery-5 {
-  background: url('../../images/assets/pizza-5.jpg');
-}
-
-.image-gallery-6 {
-  background: url('../../images/assets/pizza-6.jpg');
-}
-
-.image-gallery-7 {
-  background: url('../../images/assets/pizza-7.jpg');
-}
-
-.image-gallery-8 {
-  background: url('../../images/assets/pizza-8.jpg');
-}
-
-.image-gallery-9 {
-  background: url('../../images/assets/pizza-9.jpg');
-}
-
-.picture {
-  flex: 1;
-  height: 160px;
+.image {
+  display: inline-block;
+  flex: 3;
   margin: 5px;
-  background-position: center;
-  border-radius: 5px;
-  object-fit: cover;
-}
-
-.fa-heart, .fa-share-alt {
-  visibility: hidden;
-  font-size: 30px;
-  padding: 0 12px;
+  position: relative;
   
 }
 
-.picture:hover {
-  filter: brightness(50%);
+img {
+  width: 190px;
+  height: 190px;
+  border-radius: 5px;
+  object-fit: cover;
+  background-position: center;
+}
+
+.icon {
+  visibility: hidden;
+  font-size: 30px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+i {
+  padding: 0 8px;
+}
+
+.image:hover {
+  img {
+    filter: brightness(50%);
+  }
 
   .fa-heart, .fa-share-alt {
     visibility: visible;
     color: #fff;
-    position: relative;
-    left: 25%;
-    top: 40%;
   }
 
   .fa-heart:hover {
