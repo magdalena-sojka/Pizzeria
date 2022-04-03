@@ -11,6 +11,7 @@ export const select = {
     pages: '#pages',
     booking: '.booking-wrapper',
     home: '.home-wrapper',
+    blocksLinks: '.blocks-link',
   },
   all: {
     menuProducts: '#product-list > .product',
