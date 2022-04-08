@@ -10,6 +10,7 @@ const app = {
     const thisApp = this;
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
+    thisApp.blocksLinks = document.querySelectorAll(select.containerOf.blocksLinks);
 
     const idFromHash = window.location.hash.replace('#/', '');
     //console.log('idFromHash: ', idFromHash);
@@ -27,21 +28,9 @@ const app = {
 
     thisApp.activatePage(pageMatchingHash); 
 
-    for(let link of thisApp.navLinks){
-      link.addEventListener('click', function(event){
-        const clickedElement = this;
-        event.preventDefault();
+    thisApp.initNav(thisApp.navLinks);
 
-        /* get page if from href attribute */
-        const id = clickedElement.getAttribute('href').replace('#', '');
-
-        /* run thisApp.activatePages with that id */
-        thisApp.activatePage(id);
-
-        /*change URL hash */
-        window.location.hash = '#/' + id;
-      });
-    }
+    thisApp.initNav(thisApp.blocksLinks);
     
   },
 
@@ -66,6 +55,26 @@ const app = {
         classNames.nav.active, 
         link.getAttribute('href') == '#' + pageId
       );
+    }
+  },
+
+  initNav(links) {
+    const thisApp = this;
+
+    for(let link of links){
+      link.addEventListener('click', function(event){
+        const clickedElement = this;
+        event.preventDefault();
+
+        /* get page if from href attribute */
+        const id = clickedElement.getAttribute('href').replace('#', '');
+
+        /* run thisApp.activatePages with that id */
+        thisApp.activatePage(id);
+
+        /*change URL hash */
+        window.location.hash = '#/' + id;
+      });
     }
   },
 
@@ -129,9 +138,9 @@ const app = {
     //console.log('classNames:', classNames);
     //console.log('settings:', settings);
     //console.log('templates:', templates);
+    thisApp.initHome();
     thisApp.initPages();
     thisApp.initData();
-    thisApp.initHome();
     thisApp.initCart();
     thisApp.initBooking();
     
